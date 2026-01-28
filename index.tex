@@ -1,0 +1,386 @@
+\documentclass[12pt,a4paper]{report}
+
+% --- Paquets essentiels ---
+\usepackage[utf8]{inputenc}    % Encodage des caractères
+\usepackage[T1]{fontenc}       % Encodage de la police
+\usepackage[french]{babel}     % Support du français
+\usepackage{lmodern}           % Police vectorielle de qualité
+\usepackage{graphicx}          % Pour insérer des images
+\usepackage{geometry}          % Pour les marges
+\geometry{hmargin=2.5cm, vmargin=2.5cm}
+
+% --- Paquets pour l'électronique et les maths ---
+\usepackage{amsmath, amssymb}  % Symboles mathématiques
+\usepackage{circuitikz}        % LE paquet pour dessiner des schémas de transistors/portes
+\usepackage{array}             % Pour de beaux tableaux (tables de vérité)
+\usepackage{tcolorbox}         % Pour créer des encadrés "Définition" ou "Astuce"
+
+\usetikzlibrary{babel}
+
+% --- Informations du document ---
+\title{\textbf{Transistors et portes logiques} \\ \large L'atome numérique}
+\author{Deitsuki}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\newpage
+
+\chapter{Introduction aux Semi-conducteurs}
+Le transistor est l'unité de base de toute l'électronique moderne...
+
+\chapter{Le Transistor comme Interrupteur}
+\section{Fonctionnement du transistor NPN}
+Voici un exemple de schéma simplifié :
+
+\begin{center}
+\begin{circuitikz} \draw
+  (0,0) node[npn] (npn) {}
+  (npn.B) node[left] {B}
+  (npn.C) node[above] {C}
+  (npn.E) node[below] {E};
+\end{circuitikz}
+\end{center}
+
+\chapter{Les Portes Logiques}
+
+Nous avons jusqu'ici utilisé des boutons poussoirs et une lampe pour illustrer le
+fonctionnement des opérateurs logiques. En électronique digitale, les opérations logiques sont
+effectuées par des portes logiques. Ce sont des circuits qui combinent les signaux logiques
+présentés à leurs entrées sous forme de tensions. On aura par exemple 5V pour représenter
+l'état logique 1 et 0V pour représenter l'état 0. 
+
+\section{La porte NON (NOT)}
+
+Le but est que le signal de sortie soit à l'état haut si l'entrée est à l'état bas, et vice versa. En d'autres termes, la sortie est vraie si la condition d'entrée n'est pas remplie.
+
+\begin{center}
+\begin{tabular}{cc}
+    \begin{circuitikz} \draw
+        (0,0) node[not port] (not1) {}
+        (not1.in) -- ++(-0.5,0) node[left] {$A$}
+        (not1.out) -- ++(0.5,0) node[right] {$S = \overline{A}$};
+    \end{circuitikz}
+    & 
+    \begin{circuitikz} \draw
+        (0,0) node[european not port] (not2) {}
+        (not2.in) -- ++(-0.5,0) node[left] {$A$}
+        (not2.out) -- ++(0.5,0) node[right] {$S = \overline{A}$};
+    \end{circuitikz} \\
+    \textit{Norme américaine (ANSI)} & \textit{Norme européenne (IEC)} \\
+\end{tabular}
+\end{center}
+
+Cela nous donne la table de vérité suivante :
+
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+$A$ & Sortie ($S$) \\
+\hline
+0 & 1 \\
+1 & 0 \\
+\hline
+\end{tabular}
+\end{center}
+
+On peux la modeliser comme cela :
+
+\begin{center}
+\begin{circuitikz}[american]
+    \draw (0,3) node[vcc] (vcc) {VCC ($+5V$)};
+    
+    \draw (vcc) to[R=$220~\Omega$] (0,1.5) node[npn, anchor=C] (Q1) {Q1};
+    
+    \draw (Q1.B) to[R=$10~k\Omega$] ++(-2,0) node[left] {$A$};
+    
+    \draw (Q1.E) node[ground] {};
+    
+    \draw (Q1.C) -- ++(1.5,0) node[right] {$S = \overline{A}$};
+    
+    \fill (Q1.C) circle (1pt);
+\end{circuitikz}
+\end{center}
+
+\newpage
+\section{La porte ET (AND)}
+
+Le but est que le signal de sortie ne soit à l'état haut que si toutes les entrées le sont également. En d'autres termes, la sortie n'est vraie que si toutes les conditions d'entrée sont remplies.
+
+\begin{center}
+\begin{tabular}{cc}
+    \begin{circuitikz} \draw
+        (0,0) node[and port] (and1) {}
+        (and1.in 1) -- ++(-0.5,0) node[left] {$A$}
+        (and1.in 2) -- ++(-0.5,0) node[left] {$B$}
+        (and1.out) -- ++(0.5,0) node[right] {$S = A \cdot B$};
+    \end{circuitikz}
+    & 
+    \begin{circuitikz} \draw
+        (0,0) node[european and port] (and2) {}
+        (and2.in 1) -- ++(-0.5,0) node[left] {$A$}
+        (and2.in 2) -- ++(-0.5,0) node[left] {$B$}
+        (and2.out) -- ++(0.5,0) node[right] {$S = A \cdot B$};
+    \end{circuitikz} \\
+    \textit{Norme américaine (ANSI)} & \textit{Norme européenne (IEC)} \\
+\end{tabular}
+\end{center}
+
+Cela nous donne la table de vérité suivante :
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+$A$ & $B$ & Sortie ($S$) \\
+\hline
+0 & 0 & 0 \\
+0 & 1 & 0 \\
+1 & 0 & 0 \\
+1 & 1 & 1 \\
+\hline
+\end{tabular}
+\end{center}
+
+On peux la modeliser comme cela :
+
+\begin{center}
+\begin{circuitikz}[american]
+    \draw (0,3) node[vcc] (vcc) {VCC ($+5V$)};
+    
+    \draw (vcc) node[npn, anchor=C] (Q1) {Q1};
+    
+    \draw (0,1) node[npn, anchor=C] (Q2) {Q2};
+    \draw (Q1.E) -- (Q2.C);
+
+    \draw (Q2.E) to[R=$5k\Omega$] ++(0,-2) node[ground] {};
+
+    \draw (Q1.B) to[R=$10k\Omega$] ++(-2,0) node[left] {$A$};
+    \draw (Q2.B) to[R=$10k\Omega$] ++(-2,0) node[left] {$B$};
+
+    \draw (Q2.E) -- ++(1.5,0) node[right] {$S = \overline{A \cdot B}$};
+
+    \fill (Q2.E) circle (1pt);
+\end{circuitikz}
+\end{center}
+
+La porte ET (AND) ne se limite pas à 2 entrées. En effet, il est possible de créer des portes AND à plusieurs entrées en combinant plusieurs portes AND simples :
+
+\begin{center}
+\begin{circuitikz}
+    \draw (0,0) node[and port] (and1) {};
+    \draw (and1.in 1) node[left] {$A$};
+    \draw (and1.in 2) node[left] {$B$};
+    
+    \draw (and1.out) -- ++(0.5,0) node[and port, anchor=in 1] (and2) {};
+    \draw (and2.in 2) -- ++(0,-0.3) -- ++(-2.04,0) node[left] {$C$};
+    
+    \draw (and2.out) node[right] {$S = (A \cdot B) \cdot C$};
+\end{circuitikz}
+\end{center}
+
+On peux le représenter de cette manière :
+
+\begin{center}
+\begin{circuitikz}
+    \draw (0,0) node[and port, number inputs=3] (and3) {}
+    (and3.in 1) node[left] {$A$}
+    (and3.in 2) node[left] {$B$}
+    (and3.in 3) node[left] {$C$}
+    (and3.out) node[right] {$S = A \cdot B \cdot C$};
+\end{circuitikz}
+\end{center}
+
+\newpage
+\section{La porte OU (OR)}
+
+Le but est que le signal de sortie soit à l'état haut si au moins une des entrées l'est. En d'autres termes, la sortie est vraie si l'une des conditions d'entrée est remplie.
+
+\begin{center}
+\begin{tabular}{cc}
+    \begin{circuitikz} \draw
+        (0,0) node[or port] (or1) {}
+        (or1.in 1) -- ++(-0.5,0) node[left] {$A$}
+        (or1.in 2) -- ++(-0.5,0) node[left] {$B$}
+        (or1.out) -- ++(0.5,0) node[right] {$S = A + B$};
+    \end{circuitikz}
+    & 
+    \begin{circuitikz} \draw
+        (0,0) node[european or port] (or2) {}
+        (or2.in 1) -- ++(-0.5,0) node[left] {$A$}
+        (or2.in 2) -- ++(-0.5,0) node[left] {$B$}
+        (or2.out) -- ++(0.5,0) node[right] {$S = A + B$};
+    \end{circuitikz} \\
+    \textit{Norme américaine (ANSI)} & \textit{Norme européenne (IEC)} \\
+\end{tabular}
+\end{center}
+
+Cela nous donne la table de vérité suivante :
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+$A$ & $B$ & Sortie ($S$) \\
+\hline
+0 & 0 & 0 \\
+0 & 1 & 1 \\
+1 & 0 & 1 \\
+1 & 1 & 1 \\
+\hline
+\end{tabular}
+\end{center}
+
+On peux la modeliser comme cela :
+
+\begin{center}
+\begin{circuitikz}[american]
+    \draw (0,3) node[vcc] (vcc) {VCC ($+5V$)};
+    
+    \draw (vcc) node[npn, anchor=C] (Q1) {Q1};
+    
+    \draw (0,1) node[npn, anchor=C] (Q2) {Q2};
+    \draw (Q1.C) -- ++(1,0) -- ++(0,-2) -- (Q2.C);
+    \fill (Q1.C) circle (1pt);
+
+    \draw (Q1.E) -- ++(2,0) node[right] {$S = A + B$};
+
+    \draw (Q2.E) to[R=$5k\Omega$] ++(0,-2) node[ground] {};
+
+    \draw (Q1.B) to[R=$10k\Omega$] ++(-2,0) node[left] {$A$};
+    \draw (Q2.B) to[R=$10k\Omega$] ++(-2,0) node[left] {$B$};
+
+    \draw (Q2.E) -- ++(1.5,0) -- ++(0,2);
+    \fill (Q2.E) circle (1pt);
+    \fill (Q1.E) ++(1.5,0) circle (1pt);
+\end{circuitikz}
+\end{center}
+
+La porte OU (OR) ne se limite pas à 2 entrées. En effet, il est possible de créer des portes OR à plusieurs entrées en combinant plusieurs portes OR simples :
+
+\begin{center}
+\begin{circuitikz}
+    \draw (0,0) node[or port] (or1) {};
+    \draw (or1.in 1) node[left] {$A$};
+    \draw (or1.in 2) node[left] {$B$};
+
+    \draw (or1.out) -- ++(0.5,0) node[or port, anchor=in 1] (or2) {};
+    \draw (or2.in 2) -- ++(0,-0.3) -- ++(-2.04,0) node[left] {$C$};
+
+    \draw (or2.out) node[right] {$S = (A + B) + C$};
+\end{circuitikz}
+\end{center}
+
+On peux le représenter de cette manière :
+
+\begin{center}
+\begin{circuitikz}
+    \draw (0,0) node[or port, number inputs=3] (or3) {}
+    (or3.in 1) node[left] {$A$}
+    (or3.in 2) node[left] {$B$}
+    (or3.in 3) node[left] {$C$}
+    (or3.out) node[right] {$S = A + B + C$};
+\end{circuitikz}
+\end{center}
+
+\newpage
+\section{La porte OU exclusif (XOR)}
+
+Le but est que le signal de sortie soit à l'état haut si une seule des entrées l'est. En d'autres termes, la sortie est vraie si l'une des conditions d'entrée est remplie, mais pas les deux.
+
+\begin{center}
+\begin{tabular}{cc}
+    \begin{circuitikz} \draw
+        (0,0) node[xor port] (xor1) {}
+        (xor1.in 1) -- ++(-0.5,0) node[left] {$A$}
+        (xor1.in 2) -- ++(-0.5,0) node[left] {$B$}
+        (xor1.out) -- ++(0.5,0) node[right] {$S = A \oplus B$};
+    \end{circuitikz}
+    & 
+    \begin{circuitikz} \draw
+        (0,0) node[european xor port] (xor2) {}
+        (xor2.in 1) -- ++(-0.5,0) node[left] {$A$}
+        (xor2.in 2) -- ++(-0.5,0) node[left] {$B$}
+        (xor2.out) -- ++(0.5,0) node[right] {$S = A \oplus B$};
+    \end{circuitikz} \\
+    \textit{Norme américaine (ANSI)} & \textit{Norme européenne (IEC)} \\
+\end{tabular}
+\end{center}
+
+Cela nous donne la table de vérité suivante :
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+$A$ & $B$ & Sortie ($S$) \\
+\hline
+0 & 0 & 0 \\
+0 & 1 & 1 \\
+1 & 0 & 1 \\
+1 & 1 & 0 \\
+\hline
+\end{tabular}
+\end{center}
+
+Réaliser une porte XOR avec seulement des transistors NPN simples est assez complexe. En pratique, on explique souvent la XOR comme une combinaison de portes de base. $A \oplus B = (A \cdot \overline{B}) + (\overline{A} \cdot B)$ :
+
+\begin{center}
+\begin{circuitikz}[american]
+    \draw (0,0) node[or port] (or1) {} node[right] {$S = (A \cdot \overline{B}) + (\overline{A} \cdot B) = A \oplus B$};
+
+    \draw (or1.in 1) ++(-0.2,0.5) node[and port] (and1) {};
+    \draw (or1.in 2) ++(-0.2,-0.5) node[and port] (and2) {};
+
+    \draw (or1.in 1) -- ++(0,0.5) -- (and1.out);
+    \draw (or1.in 2) -- ++(0,-0.5) -- (and2.out);
+
+    \draw (and1.in 2) ++(-0.5,0) node[not port, scale=0.5] (not1) {};
+    \draw (and2.in 1) ++(-0.5,0) node[not port, scale=0.5] (not2) {};
+
+    \draw (and1.in 2) -- (not1.out);
+    \draw (and2.in 1) -- (not2.out);
+
+    \draw (and1.in 1) -- ++(-1.5,0) node[left] {$A$};
+    \draw (not1.in) -- ++(-0.65,0) node[left] {$B$};
+
+    \draw (not2.in) -- ++(-0.2,0) -- ++(0, 1.56);
+    \fill (not2.in) ++(-0.2, 1.56) circle (1pt);
+
+    \draw (and2.in 2) -- ++(-1.3,0) -- ++(0, 1.56);
+    \fill (and2.in 2) ++(-1.3, 1.56) circle (1pt);
+\end{circuitikz}
+\end{center}
+
+La porte OU exclusif (XOR) ne se limite pas à 2 entrées. En effet, il est possible de créer des portes XOR à plusieurs entrées en combinant plusieurs portes XOR simples :
+
+\begin{center}
+\begin{circuitikz}
+    \draw (0,0) node[xor port] (xor1) {};
+    \draw (xor1.in 1) node[left] {$A$};
+    \draw (xor1.in 2) node[left] {$B$};
+
+    \draw (xor1.out) -- ++(0.5,0) node[xor port, anchor=in 1] (xor2) {};
+    \draw (xor2.in 2) -- ++(0,-0.3) -- ++(-2.04,0) node[left] {$C$};
+
+    \draw (xor2.out) node[right] {$S = (A \oplus B) \oplus C$};
+\end{circuitikz}
+\end{center}
+
+On peux le représenter de cette manière :
+
+\begin{center}
+\begin{circuitikz}
+    \draw (0,0) node[xor port, number inputs=3] (xor3) {}
+    (xor3.in 1) node[left] {$A$}
+    (xor3.in 2) node[left] {$B$}
+    (xor3.in 3) node[left] {$C$}
+    (xor3.out) node[right] {$S = A \oplus B \oplus C$};
+\end{circuitikz}
+\end{center}
+
+\chapter{Circuits Logiques}
+
+Les circuits logiques sont des dispositifs électroniques qui effectuent des opérations logiques sur des signaux binaires. Ils sont la pierre angulaire de l'électronique numérique et sont utilisés dans une variété d'applications, des ordinateurs aux systèmes embarqués.
+
+\end{document}

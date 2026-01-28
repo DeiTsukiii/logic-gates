@@ -1,0 +1,10 @@
+\babel@toc {french}{}\relax 
+\contentsline {chapter}{\numberline {1}Introduction aux Semi-conducteurs}{2}{}%
+\contentsline {chapter}{\numberline {2}Le Transistor comme Interrupteur}{3}{}%
+\contentsline {section}{\numberline {2.1}Fonctionnement du transistor NPN}{3}{}%
+\contentsline {chapter}{\numberline {3}Les Portes Logiques}{4}{}%
+\contentsline {section}{\numberline {3.1}La porte NON (NOT)}{4}{}%
+\contentsline {section}{\numberline {3.2}La porte ET (AND)}{5}{}%
+\contentsline {section}{\numberline {3.3}La porte OU (OR)}{6}{}%
+\contentsline {section}{\numberline {3.4}La porte OU exclusif (XOR)}{7}{}%
+\contentsline {chapter}{\numberline {4}Circuits Logiques}{8}{}%
